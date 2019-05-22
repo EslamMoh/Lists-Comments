@@ -4,6 +4,7 @@ class List < ApplicationRecord
   has_many :member_lists, dependent: :destroy
   has_many :members, -> { where role: 'member' }, through: :member_lists,
                                                   source: :user
+  has_many :cards
 
   # validations
   validates :title, presence: true

@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :lists, foreign_key: 'admin_id'
   has_many :member_lists, dependent: :destroy
   has_many :assigned_lists, through: :member_lists, source: :list
+  has_many :cards
 
   # enums
   enum role: %i[admin member]
