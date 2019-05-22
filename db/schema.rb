@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20190522042814) do
   create_table "cards", force: :cascade do |t|
     t.string "title"
     t.string "description"
-    t.integer "comments_count"
+    t.integer "comments_count", default: 0
     t.bigint "user_id"
     t.bigint "list_id"
     t.datetime "created_at", null: false
