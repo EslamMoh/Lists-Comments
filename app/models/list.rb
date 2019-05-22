@@ -1,6 +1,9 @@
 class List < ApplicationRecord
   # associations
-  belongs_to :admin, class_name: 'User'
+  belongs_to :admin, -> { where role: 'admin' }, class_name: 'User'
+  has_many :member_lists, dependent: :destroy
+  has_many :members, -> { where role: 'member' }, through: :member_lists,
+                                                  source: :user
 
   # validations
   validates :title, presence: true
