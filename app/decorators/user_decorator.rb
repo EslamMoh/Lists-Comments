@@ -6,7 +6,9 @@ class UserDecorator < Draper::Decorator
       id: id,
       name: name,
       email: email,
-      role: role
+      role: role,
+      created_at: created_at,
+      updated_at: updated_at
     }
   end
 end

@@ -5,7 +5,9 @@ class CardDecorator < Draper::Decorator
     output = {
       id: id,
       title: title,
-      description: description
+      description: description,
+      created_at: created_at,
+      updated_at: updated_at
     }
 
     output['cards'] = comments.limit(3).try(:decorate).try(:as_json) if options[:comments]
