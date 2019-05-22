@@ -1,4 +1,24 @@
 GIT
+  remote: https://github.com/drapergem/draper.git
+  revision: d44c86f1e560afc0cf0dad4ae09bfaa3f10a1759
+  specs:
+    draper (3.1.0)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
+      activemodel-serializers-xml (>= 1.0)
+      activesupport (>= 5.0)
+      request_store (>= 1.0)
+
+GIT
+  remote: https://github.com/rails/activemodel-serializers-xml
+  revision: 93689638c28525acc65afb638fce866826532641
+  specs:
+    activemodel-serializers-xml (1.0.2)
+      activemodel (>= 5.0.0.a)
+      activesupport (>= 5.0.0.a)
+      builder (~> 3.1)
+
+GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
   revision: 4b160bd19ecca7f97d7ac22dccd5fde9b0da5a9f
   branch: rails-5
@@ -158,6 +178,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    request_store (1.4.1)
+      rack (>= 1.4)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -223,9 +245,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemodel-serializers-xml!
   bcrypt (~> 3.1.7)
   byebug
   database_cleaner
+  draper!
   factory_bot_rails
   faker
   guard-rspec
