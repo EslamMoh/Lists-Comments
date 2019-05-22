@@ -1,0 +1,26 @@
+class Comment < ApplicationRecord
+  # associations
+  has_many :replies, class_name: 'Comment', as: :commentable,
+                     dependent: :restrict_with_error
+  belongs_to :commentable, polymorphic: true
+
+  # validations
+  validates :content, presence: true
+
+  # callbacks
+  after_create -> { update_comments_counter('increment') }, if: -> { commentable.is_a? Card }
+  before_destroy -> { update_comments_counter('decrement') }, if: -> { commentable.is_a? Card }
+
+  private
+
+  def update_comments_counter(operation)
+    comments_count = commentable.comments_count
+    return if comments_count.zero?
+
+    if operation == 'increment'
+      commentable.update(comments_count: comments_count + 1)
+      return
+    end
+    commentable.update(comments_count: comments_count - 1)
+  end
+end
