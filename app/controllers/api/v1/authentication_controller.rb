@@ -2,6 +2,7 @@ module Api
   module V1
     class AuthenticationController < Api::V1::BaseController
       skip_before_action :authorize_request
+      skip_load_and_authorize_resource
       # POST auth/login
       # return auth token once user is authenticated
       def authenticate

@@ -2,6 +2,7 @@ module Api
   module V1
     class UsersController < Api::V1::BaseController
       skip_before_action :authorize_request, only: :create
+      skip_load_and_authorize_resource only: %i[create show]
       # POST /signup
       # return authenticated token upon signup
       def create

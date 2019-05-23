@@ -4,6 +4,7 @@ module Api
     class BaseController < ApplicationController
       # called before every action on controllers
       before_action :authorize_request
+      load_and_authorize_resource
       attr_reader :current_user
 
       private
