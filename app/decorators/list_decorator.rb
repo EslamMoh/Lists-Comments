@@ -9,7 +9,7 @@ class ListDecorator < Draper::Decorator
       updated_at: updated_at
     }
 
-    output['cards'] = cards.try(:decorate).try(:as_json) if options[:cards]
+    output['cards'] = cards.most_common.try(:decorate).try(:as_json) if options[:cards]
     output['admin'] = admin.try(:decorate).try(:as_json) if options[:admin]
     output
   end

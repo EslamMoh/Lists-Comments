@@ -1,7 +1,7 @@
 class Comment < ApplicationRecord
   # associations
   has_many :replies, class_name: 'Comment', as: :commentable,
-                     dependent: :restrict_with_error
+                     dependent: :destroy
   belongs_to :commentable, polymorphic: true
 
   # validations
