@@ -34,7 +34,7 @@ gem 'kaminari'
 gem 'draper', github: 'drapergem/draper'
 gem 'activemodel-serializers-xml', git: 'https://github.com/rails/activemodel-serializers-xml'
 # authorization
-gem 'cancancan'
+gem "pundit"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

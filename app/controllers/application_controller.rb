@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include Pundit
   include Response
   include ExceptionHandler
 

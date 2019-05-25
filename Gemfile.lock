@@ -71,7 +71,6 @@ GEM
     bcrypt (3.1.12)
     builder (3.2.3)
     byebug (11.0.1)
-    cancancan (3.0.1)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
@@ -148,6 +147,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     puma (3.12.1)
+    pundit (2.0.1)
+      activesupport (>= 3.0.0)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -249,7 +250,6 @@ DEPENDENCIES
   activemodel-serializers-xml!
   bcrypt (~> 3.1.7)
   byebug
-  cancancan
   database_cleaner
   draper!
   factory_bot_rails
@@ -260,6 +260,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   puma (~> 3.7)
+  pundit
   rails (~> 5.1.7)
   rspec-collection_matchers
   rspec-its

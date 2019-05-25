@@ -4,25 +4,29 @@ module Api
       before_action :set_list, only: %i[update destroy
                                         assign_member unassign_member]
       before_action :set_member, only: %i[assign_member unassign_member]
+      after_action :verify_authorized
 
       # GET /api/v1/lists
       # fetches all lists if admin, fetch assigned lists for member
       def index
-        lists = scope.includes(:admin).page(page).per(per)
+        lists = policy_scope(List).includes(:admin).page(page).per(per)
+        authorize lists
         json_response(PageDecorator.decorate(lists).as_json(admin: true), :ok)
       end
 
       # GET /api/v1/lists/:id
       # fetch list by id
       def show
-        @list = scope.includes(:cards).find(params[:id])
+        @list = policy_scope(List).includes(:cards).find(params[:id])
+        authorize @list
         json_response(@list.decorate.as_json(cards: true), :ok)
       end
 
       # POST /api/v1/lists
       # create new list
       def create
-        @list = current_user.lists.new(list_params)
+        @list = scope.new(list_params)
+        authorize @list
 
         if @list.save
           json_response(@list.decorate, :created)
@@ -34,6 +38,8 @@ module Api
       # PUT /api/v1/lists/:id
       # update list by id
       def update
+        authorize @list
+
         if @list.update(list_params)
           json_response(@list.decorate, :created)
         else
@@ -44,6 +50,7 @@ module Api
       # DELETE /api/v1/lists/:id
       # remove list
       def destroy
+        authorize @list
         @list.destroy
         head :no_content
       end
@@ -51,6 +58,7 @@ module Api
       # POST /api/v1/lists/:id/assign_member/:member_id
       # assign member to list
       def assign_member
+        authorize List
         @member.assigned_lists << @list
         json_response({ message: 'List assigned successfully' }, :ok)
       end
@@ -58,6 +66,7 @@ module Api
       # DELETE /api/v1/lists/:id/unassign_member/:member_id
       # unassign member from list
       def unassign_member
+        authorize List
         @member.assigned_lists.delete(@list)
         json_response({ message: 'List unassigned successfully' }, :ok)
       end
@@ -65,13 +74,11 @@ module Api
       private
 
       def set_list
-        @list = current_user.lists.find(params[:id])
+        @list = scope.find(params[:id])
       end
 
       def scope
-        return List if current_user.admin?
-
-        current_user.assigned_lists
+        ListPolicy::Scope.new(current_user, List).admin_scope
       end
 
       def list_params
