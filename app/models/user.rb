@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :member_lists, dependent: :destroy
   has_many :assigned_lists, through: :member_lists, source: :list
   has_many :cards
+  has_many :comments
 
   # enums
   enum role: %i[admin member]

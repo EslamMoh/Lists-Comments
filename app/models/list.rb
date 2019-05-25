@@ -5,6 +5,7 @@ class List < ApplicationRecord
   has_many :members, -> { where role: 'member' }, through: :member_lists,
                                                   source: :user
   has_many :cards
+  has_many :comments, through: :cards
 
   # validations
   validates :title, presence: true

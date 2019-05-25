@@ -3,6 +3,7 @@ class Comment < ApplicationRecord
   has_many :replies, class_name: 'Comment', as: :commentable,
                      dependent: :destroy
   belongs_to :commentable, polymorphic: true
+  belongs_to :user
 
   # validations
   validates :content, presence: true

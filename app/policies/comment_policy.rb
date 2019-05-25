@@ -1,13 +1,9 @@
-class CardPolicy < ApplicationPolicy
+class CommentPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      user.cards
-    end
-
-    def scope
       return scope.all if user.admin?
 
-      user.cards
+      user.comments
     end
   end
 

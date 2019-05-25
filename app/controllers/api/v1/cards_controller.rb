@@ -59,7 +59,7 @@ module Api
       end
 
       def scope
-        policy_scope(List).find(params[:list_id]).cards
+        policy_scope(List).find(params[:list_id]).includes(:cards).cards
       end
 
       def card_params
