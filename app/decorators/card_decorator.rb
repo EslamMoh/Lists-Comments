@@ -6,6 +6,7 @@ class CardDecorator < Draper::Decorator
       id: id,
       title: title,
       description: description,
+      comments_count: comments_count,
       created_at: created_at,
       updated_at: updated_at
     }

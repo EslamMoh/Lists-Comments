@@ -4,10 +4,10 @@ class CardPolicy < ApplicationPolicy
       user.cards
     end
 
-    def scope
-      return scope.all if user.admin?
+    def users_scope
+      return scope.where(list_id: List.select(:id)) if user.admin?
 
-      user.cards
+      scope.where(list_id: user.assigned_lists.select(:id))
     end
   end
 

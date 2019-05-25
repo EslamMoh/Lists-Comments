@@ -77,7 +77,7 @@ module Api
       end
 
       def scope
-        ListPolicy::Scope.new(current_user, List).scope
+        ListPolicy::Scope.new(current_user, List).users_scope
       end
 
       def list_params

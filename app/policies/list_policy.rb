@@ -6,7 +6,7 @@ class ListPolicy < ApplicationPolicy
       user.assigned_lists
     end
 
-    def scope
+    def users_scope
       return user.lists if user.admin?
 
       user.assigned_lists

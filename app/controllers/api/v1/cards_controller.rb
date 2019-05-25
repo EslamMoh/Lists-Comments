@@ -59,7 +59,8 @@ module Api
       end
 
       def scope
-        policy_scope(List).find(params[:list_id]).includes(:cards).cards
+        CardPolicy::Scope.new(current_user, Card).users_scope
+                         .where(list_id: params[:list_id])
       end
 
       def card_params
