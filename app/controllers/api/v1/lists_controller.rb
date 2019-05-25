@@ -4,7 +4,6 @@ module Api
       before_action :set_list, only: %i[update destroy
                                         assign_member unassign_member]
       before_action :set_member, only: %i[assign_member unassign_member]
-      after_action :verify_authorized
 
       # GET /api/v1/lists
       # fetches all lists if admin, fetch assigned lists for member
@@ -17,21 +16,21 @@ module Api
       # GET /api/v1/lists/:id
       # fetch list by id
       def show
-        @list = policy_scope(List).includes(:cards).find(params[:id])
-        authorize @list
-        json_response(@list.decorate.as_json(cards: true), :ok)
+        list = policy_scope(List).includes(:cards).find(params[:id])
+        authorize list
+        json_response(list.decorate.as_json(cards: true), :ok)
       end
 
       # POST /api/v1/lists
       # create new list
       def create
-        @list = scope.new(list_params)
-        authorize @list
+        list = scope.new(list_params)
+        authorize list
 
         if @list.save
-          json_response(@list.decorate, :created)
+          json_response(list.decorate, :created)
         else
-          json_response(@list.errors, :unprocessable_entity)
+          json_response(list.errors, :unprocessable_entity)
         end
       end
 
@@ -41,7 +40,7 @@ module Api
         authorize @list
 
         if @list.update(list_params)
-          json_response(@list.decorate, :created)
+          json_response(@list.decorate, :ok)
         else
           json_response(@list.errors, :unprocessable_entity)
         end
@@ -78,7 +77,7 @@ module Api
       end
 
       def scope
-        ListPolicy::Scope.new(current_user, List).admin_scope
+        ListPolicy::Scope.new(current_user, List).scope
       end
 
       def list_params
