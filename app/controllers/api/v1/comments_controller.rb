@@ -2,27 +2,28 @@ module Api
   module V1
     class CommentsController < Api::V1::BaseController
       before_action :set_comment, only: %i[update destroy]
-
-      # GET /api/v1/comments/:list_id
-      # fetches all comments for current user for list
+      # GET /api/v1/comments/:commentable_id/:commentable_type
+      # fetches all comments for resource (Card or Comment)
       def index
-        comments = scope.most_common.page(page).per(per)
+        comments = commentable_scope.page(page).per(per)
         authorize comments
         json_response(PageDecorator.decorate(comments), :ok)
       end
 
-      # GET /api/v1/comments/:list_id/:id
+      # GET /api/v1/comments/:id
       # fetch comment by id and list id
       def show
-        comment = scope.includes(:comments).find(params[:id])
+        comment = CommentPolicy::Scope.new(current_user, Comment)
+                                      .comments_and_replies_scope
+                                      .find(params[:id])
         authorize comment
-        json_response(comment.decorate.as_json(comments: true), :ok)
+        json_response(comment.decorate.as_json(replies: true), :ok)
       end
 
-      # POST /api/v1/comments/:list_id
+      # POST /api/v1/comments
       # create new comment
       def create
-        comment = scope.new(comment_params)
+        comment = creation_commentable_scope.new(comment_params)
         authorize comment
 
         if comment.save
@@ -55,17 +56,34 @@ module Api
       private
 
       def set_comment
-        @comment = policy_scope(Comment).find(params[:id])
+        @comment = scope.find(params[:id])
       end
 
       def scope
-        policy_scope(List).find(Card.find(params[:card_id]).includes(:list)
-                                .list.id).includes(:comments).comments
+        CommentPolicy::Scope.new(current_user, Comment)
+                            .update_and_remove_scope
       end
 
       def comment_params
-        params.fetch(:comment, {}).permit(:title, :description)
-              .merge(user: current_user)
+        params.fetch(:comment, {}).permit(:content, :commentable_type,
+                                          :commentable_id)
+      end
+
+      def commentable_scope
+        if params[:commentable_type].upcase! == 'CARD'
+          policy_scope(Comment).where(commentable_id: params[:commentable_id])
+          return
+        end
+        policy_scope(Comment).find(params[:commentable_id]).replies
+      end
+
+      def creation_commentable_scope
+        if comment_params[:commentable_type].upcase! == 'CARD'
+          policy_scope(Comment).where(commentable_id: comment_params[:commentable_id],
+                                      commentable_type: 'Card')
+          return
+        end
+        policy_scope(Comment).find(comment_params[:commentable_id]).replies
       end
     end
   end

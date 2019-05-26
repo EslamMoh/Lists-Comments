@@ -9,12 +9,12 @@ module ExceptionHandler
 
   included do
     # Define custom handlers
-    rescue_from ActiveRecord::RecordInvalid, with: :four_twenty_two
+    rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_request
     rescue_from ExceptionHandler::AuthenticationError, with: :unauthorized_request
-    rescue_from ExceptionHandler::MissingToken, with: :four_twenty_two
-    rescue_from ExceptionHandler::InvalidToken, with: :four_twenty_two
-    rescue_from ExceptionHandler::UnpermittedAccess, with: :four_zero_three
-    rescue_from Pundit::NotAuthorizedError, with: :four_zero_three
+    rescue_from ExceptionHandler::MissingToken, with: :unprocessable_request
+    rescue_from ExceptionHandler::InvalidToken, with: :unprocessable_request
+    rescue_from ExceptionHandler::UnpermittedAccess, with: :forbidden_request
+    rescue_from Pundit::NotAuthorizedError, with: :forbidden_request
 
     rescue_from ActiveRecord::RecordNotFound do |e|
       json_response({ message: e.message }, :not_found)
@@ -24,7 +24,7 @@ module ExceptionHandler
   private
 
   # JSON response with message; Status code 422 - unprocessable entity
-  def four_twenty_two(e)
+  def unprocessable_request(e)
     json_response({ message: e.message }, :unprocessable_entity)
   end
 
@@ -34,7 +34,7 @@ module ExceptionHandler
   end
 
   # JSON response with message; Status code 403 - Forbidden
-  def four_zero_three
+  def forbidden_request
     json_response({ message: 'You are not permitted to access this request' },
                   :forbidden)
   end

@@ -6,12 +6,12 @@ module Api
       # GET /api/v1/cards/:list_id
       # fetches all cards for current user for list
       def index
-        cards = scope.most_common.page(page).per(per)
+        cards = scope.where(list_id: params[:list_id]).most_common.page(page).per(per)
         authorize cards
         json_response(PageDecorator.decorate(cards), :ok)
       end
 
-      # GET /api/v1/cards/:list_id/:id
+      # GET /api/v1/cards/:id
       # fetch card by id and list id
       def show
         card = scope.includes(:comments).find(params[:id])
@@ -22,7 +22,7 @@ module Api
       # POST /api/v1/cards/:list_id
       # create new card
       def create
-        card = scope.new(card_params)
+        card = scope.where(list_id: params[:list_id]).new(card_params)
         authorize card
 
         if card.save
@@ -60,7 +60,6 @@ module Api
 
       def scope
         CardPolicy::Scope.new(current_user, Card).users_scope
-                         .where(list_id: params[:list_id])
       end
 
       def card_params

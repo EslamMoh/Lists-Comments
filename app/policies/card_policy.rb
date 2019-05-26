@@ -5,9 +5,9 @@ class CardPolicy < ApplicationPolicy
     end
 
     def users_scope
-      return scope.where(list_id: List.select(:id)) if user.admin?
+      return scope.where(list_id: List.pluck(:id)) if user.admin?
 
-      scope.where(list_id: user.assigned_lists.select(:id))
+      scope.where(list_id: user.assigned_lists.pluck(:id))
     end
   end
 

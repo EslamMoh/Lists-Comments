@@ -2,6 +2,22 @@ module Api
   module V1
     class UsersController < Api::V1::BaseController
       skip_before_action :authorize_request, only: :create
+
+      # GET /users
+      # get list of users
+      def index
+        users = User.all
+        authorize users
+        json_response(PageDecorator.decorate(users), :ok)
+      end
+
+      # GET /user
+      # get current user data
+      def show
+        authorize User
+        json_response(current_user.decorate, :ok)
+      end
+
       # POST /signup
       # return authenticated token upon signup
       def create
@@ -11,12 +27,6 @@ module Api
         response = { message: Message.account_created,
                      auth_token: auth_token }
         json_response(response, :created)
-      end
-
-      # GET /user
-      # get current user data
-      def show
-        json_response(current_user.decorate, :ok)
       end
 
       private
