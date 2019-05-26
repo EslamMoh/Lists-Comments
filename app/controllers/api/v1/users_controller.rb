@@ -6,7 +6,7 @@ module Api
       # GET /users
       # get list of users
       def index
-        users = User.all
+        users = User.all.page(page).per(per)
         authorize users
         json_response(PageDecorator.decorate(users), :ok)
       end

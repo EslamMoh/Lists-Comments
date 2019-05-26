@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   # validations
   validates :name, :password_digest, :role, presence: true
-  validates :email, uniqueness: { scope: :role },
+  validates :email, uniqueness: true,
                     presence: true,
                     format: { with: URI::MailTo::EMAIL_REGEXP,
                               message: 'only allows valid emails' }
