@@ -1,6 +1,6 @@
 class Card < ApplicationRecord
   # associations
-  has_many :comments, as: :commentable
+  has_many :comments, as: :commentable, dependent: :destroy
   belongs_to :user
   belongs_to :list
 
