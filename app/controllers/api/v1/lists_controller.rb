@@ -27,7 +27,7 @@ module Api
         list = scope.new(list_params)
         authorize list
 
-        if @list.save
+        if list.save
           json_response(list.decorate, :created)
         else
           json_response(list.errors, :unprocessable_entity)
