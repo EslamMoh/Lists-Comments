@@ -8,6 +8,7 @@ class Comment < ApplicationRecord
   # validations
   validates :content, presence: true
   validate  :commentable_reply
+
   # callbacks
   after_create -> { update_comments_counter('increment') }, if: -> { commentable.is_a? Card }
   before_destroy -> { update_comments_counter('decrement') }, if: -> { commentable.is_a? Card }
@@ -26,6 +27,8 @@ class Comment < ApplicationRecord
   end
 
   def commentable_reply
-    errors.add(:base, 'You cannot reply to another reply.') if commentable_type == 'Comment'
+    if commentable_type == 'Comment' && commentable.try(:commentable).try(:class).try(:name) == 'Comment'
+      errors.add(:base, 'You cannot reply to another reply.')
+    end
   end
 end

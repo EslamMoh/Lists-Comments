@@ -9,15 +9,19 @@ class CommentPolicy < ApplicationPolicy
     def comments_and_replies_scope
       return scope.all if user.admin?
 
-      Comment.where(commentable: Card.where(list_id: user.assigned_lists.pluck(:id)) +
-      Comment.where(commentable: Card.where(list_id: user.assigned_lists.pluck(:id))))
+      cards_ids = Card.where(list_id: user.assigned_lists.pluck(:id)).pluck(:id)
+      Comment.where("(commentable_id IN (:card_ids) AND commentable_type = 'Card') OR (commentable_id IN (:comment_ids) AND commentable_type = 'Comment')", 
+                    card_ids: cards_ids,
+                    comment_ids: Comment.where(commentable: cards_ids).pluck(:id))
     end
 
     def update_and_remove_scope
       if user.admin?
-        (Comment.where(commentable: Card.where(list_id: user.lists.pluck(:id)) +
-         Comment.where(commentable: Card.where(list_id: user.lists.pluck(:id)))) +
-         Comment.where(user_id: user.id)).uniq
+        cards_ids = Card.where(list_id: user.lists.pluck(:id)).pluck(:id)
+        Comment.where("(commentable_id IN (:card_ids) AND commentable_type = 'Card') OR (commentable_id IN (:comment_ids) AND commentable_type = 'Comment') OR user_id = :user_id", 
+                      card_ids: cards_ids,
+                      comment_ids: Comment.where(commentable: cards_ids).pluck(:id),
+                      user_id: user.id).distinct(:id)
       else
         user.comments
       end

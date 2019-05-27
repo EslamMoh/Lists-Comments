@@ -2,7 +2,7 @@ module Api
   module V1
     class CommentsController < Api::V1::BaseController
       before_action :set_comment, only: %i[update destroy]
-      # GET /api/v1/comments/:commentable_id/:commentable_type
+      # GET /api/v1/comments
       # fetches all comments for resource (Card or Comment)
       def index
         comments = commentable_scope.page(page).per(per)
@@ -67,21 +67,22 @@ module Api
       def comment_params
         params.fetch(:comment, {}).permit(:content, :commentable_type,
                                           :commentable_id)
+              .merge(user_id: current_user.id)
       end
 
       def commentable_scope
-        if params[:commentable_type].upcase! == 'CARD'
-          policy_scope(Comment).where(commentable_id: params[:commentable_id])
-          return
+        if params[:commentable_type].upcase == 'CARD'
+          return policy_scope(Comment).where(commentable_id: params[:commentable_id],
+                                             commentable_type: 'Card')
         end
         policy_scope(Comment).find(params[:commentable_id]).replies
       end
 
       def creation_commentable_scope
-        if comment_params[:commentable_type].upcase! == 'CARD'
-          policy_scope(Comment).where(commentable_id: comment_params[:commentable_id],
-                                      commentable_type: 'Card')
-          return
+        if comment_params[:commentable_type].upcase == 'CARD'
+          return CardPolicy::Scope.new(current_user, Card).users_scope
+                                  .find(comment_params[:commentable_id])
+                                  .comments
         end
         policy_scope(Comment).find(comment_params[:commentable_id]).replies
       end
