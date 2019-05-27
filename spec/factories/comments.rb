@@ -1,11 +1,11 @@
 FactoryBot.define do
   factory :comment do
     content { 'This is a testing content for a comment' }
-    commentable { card }
+    commentable { FactoryBot.create(:card) }
     user
   end
 
   factory :reply, parent: :comment do
-    commentable { comment }
+    commentable { FactoryBot.create(:comment) }
   end
 end
