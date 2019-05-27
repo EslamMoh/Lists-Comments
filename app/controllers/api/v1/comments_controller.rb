@@ -4,6 +4,7 @@ module Api
       before_action :set_comment, only: %i[update destroy]
       # GET /api/v1/comments
       # fetches all comments for resource (Card or Comment)
+      # commentable type and commentable id params should be sent as query strings
       def index
         comments = commentable_scope.page(page).per(per)
         authorize comments

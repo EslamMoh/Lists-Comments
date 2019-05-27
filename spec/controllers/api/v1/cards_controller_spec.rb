@@ -27,15 +27,16 @@ RSpec.describe Api::V1::CardsController, type: :controller do
 
     context 'fetching all cards in members not assigned list using member token' do
       before(:each) { authorization_header(member_token) }
-      it 'returns not found' do
+      it 'returns ok with empty records' do
         get :index, params: { list_id: third_list.id }
+        expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)['total']).to eq(0)
       end
     end
 
     context 'fetching all cards in members list using member token' do
       before(:each) { authorization_header(member_token) }
-      it 'returns not found' do
+      it 'returns ok' do
         get :index, params: { list_id: first_list.id }
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)['records'].size).to eq(1)
@@ -99,7 +100,7 @@ RSpec.describe Api::V1::CardsController, type: :controller do
 
     context 'create card to assigned list using member token' do
       before(:each) { authorization_header(member_token) }
-      it 'returns forbidden' do
+      it 'returns created card' do
         post :create, params: { card: card_params, list_id: second_list.id }
         expect(response).to have_http_status(:created)
         expect(JSON.parse(response.body)['id']).to eq(Card.last.id)
