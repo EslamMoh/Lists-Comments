@@ -10,15 +10,13 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
     let(:valid_credentials) do
       {
         email: user.email,
-        password: user.password,
-        role: 'member'
+        password: user.password
       }
     end
     let(:invalid_credentials) do
       {
         email: Faker::Internet.email,
-        password: Faker::Internet.password,
-        role: 'member'
+        password: Faker::Internet.password
       }
     end
 
