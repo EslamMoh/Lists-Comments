@@ -3,7 +3,7 @@ module Api
     class CardsController < Api::V1::BaseController
       before_action :set_card, only: %i[update destroy]
 
-      # GET /api/v1/cards/:list_id
+      # GET /api/v1/cards/list/:list_id
       # fetches all cards for current user for list
       def index
         cards = scope.where(list_id: params[:list_id]).most_common.page(page).per(per)
@@ -22,7 +22,7 @@ module Api
       # POST /api/v1/cards/:list_id
       # create new card
       def create
-        card = scope.where(list_id: params[:list_id]).new(card_params)
+        card = policy_scope(List).find(params[:list_id]).cards.new(card_params)
         authorize card
 
         if card.save

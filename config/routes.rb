@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       get 'comments/:id', to: 'comments#show'
       get 'comments/:commentable_id/:commentable_type', to: 'comments#index'
       get 'cards/:id', to: 'cards#show'
-      get 'cards/:list_id', to: 'cards#index'
+      get 'cards/list/:list_id', to: 'cards#index'
       get 'users', to: 'users#index'
       get 'user', to: 'users#show'
     end
