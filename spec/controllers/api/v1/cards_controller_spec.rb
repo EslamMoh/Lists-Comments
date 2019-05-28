@@ -84,7 +84,7 @@ RSpec.describe Api::V1::CardsController, type: :controller do
   describe 'POST /cards/:list_id' do
     let(:card_params) do
       {
-        description: "This is a testing description",
+        description: 'This is a testing description',
         title: Faker::Company.name
       }
     end
@@ -119,7 +119,7 @@ RSpec.describe Api::V1::CardsController, type: :controller do
   describe 'PUT /cards/:id' do
     let(:card_params) do
       {
-        description: "This is a testing description",
+        description: 'This is a testing description',
         title: Faker::Company.name
       }
     end

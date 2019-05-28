@@ -176,7 +176,7 @@ RSpec.describe Api::V1::ListsController, type: :controller do
         post :assign_member,
              params: { id: first_list, member_id: member.id }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['message']).to eq("List assigned successfully")
+        expect(JSON.parse(response.body)['message']).to eq('List assigned successfully')
       end
     end
 
@@ -219,7 +219,7 @@ RSpec.describe Api::V1::ListsController, type: :controller do
         post :unassign_member,
              params: { id: first_list, member_id: member.id }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['message']).to eq("List unassigned successfully")
+        expect(JSON.parse(response.body)['message']).to eq('List unassigned successfully')
       end
     end
 
